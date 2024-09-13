@@ -11,7 +11,7 @@ The Stock Price App allows users to search for stock prices using stock symbols.
    Clone the repository: git clone https://github.com/Leopez01/Stock-Price-App.git
    
 ## Install Dependencies
-   Note: Make sure you have Node.js installed. Then install the required dependencies with\
+   Note: Make sure you have Node.js installed. Then install the required dependencies\
    cd stock-price-app\
    npm install
    

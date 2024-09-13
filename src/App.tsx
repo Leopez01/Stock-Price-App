@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Container } from "@mui/material";
+import SearchBar from "./components/SearchBar";
+import StockPriceDisplay from "./components/StockPriceDisplay";
+import ErrorMessage from "./components/ErrorMessage";
+import { fetchStockPrice } from "./services/api";
 
-function App() {
+const App: React.FC = () => {
+  const [stockPrice, setStockPrice] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [symbol, setSymbol] = useState<string>("");
+
+  const handleSearch = async (symbol: string) => {
+    setError(null);
+    setStockPrice(null);
+
+    try {
+      // Fetch the stock price using the API
+      const data = await fetchStockPrice(symbol);
+      if (data && data.c) {
+        setStockPrice(data.c); // 'c' is the current price from API response
+        setSymbol(symbol);
+      } else {
+        setError("Invalid stock symbol. Please try again.");
+      }
+    } catch (error) {
+      setError("Failed to fetch stock price. Please try again later.");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="sm">
+      <SearchBar onSearch={handleSearch} />
+      {error && <ErrorMessage message={error} />}
+      {stockPrice !== null && (
+        <StockPriceDisplay price={stockPrice} symbol={symbol} />
+      )}
+    </Container>
   );
-}
+};
 
 export default App;
+
